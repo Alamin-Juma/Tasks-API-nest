@@ -4,6 +4,7 @@ import { Task, TaskStatus } from './tasks.model';
 import { title } from 'process';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilter } from './dto/get-tasks-filter.dto';
+import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -18,6 +19,7 @@ export class TasksController {
     // /tasks?status=IN_PROGRESS: Fetches tasks with the status IN_PROGRESS.
     // /tasks?search=meeting: Fetches tasks that contain "meeting" in either title or description.
     // /tasks?status=IN_PROGRESS&search=meeting: Fetches tasks with the status IN_PROGRESS and containing "meeting" in title or description.
+    // //http://localhost:3000/tasks?status=OPEN
     @Get()
     getTaks(@Query() filterDto: GetTasksFilter): Task[] {
         //if we have any filters defined, calls tasksService.getTasksWithFilters
@@ -48,7 +50,8 @@ export class TasksController {
     }
 
     @Patch('/:id/status')
-    updateTask(@Param('id') id: string, @Body('status') status: TaskStatus): Task {
+    updateTask(@Param('id') id: string, @Body() updateTaskStatusDto: UpdateTaskStatusDto): Task {
+        const {status}  = updateTaskStatusDto
         return this.taskService.updateTask(id, status)
     }
 }
